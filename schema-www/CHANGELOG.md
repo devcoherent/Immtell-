@@ -68,3 +68,28 @@ What to check on each:
 - No errors
 - `@id`s use www
 - On News, check for any empty `ld+json` block (seen in the 23 Oct crawl)
+
+## Follow-up fixes (applied 2026-10-25, not published)
+1. `/resources-pages/what-happens-during-a-home-office-compliance-audit`:
+   - `#organisation` → `#organization` (2 places)
+   - Organization `url` `https://www.immtell.com/` → `https://www.immtell.com`
+2. Gavin Webster `@id` unified to `https://www.immtell.com/about/gavin-webster#person` (was `/#gavin-webster`):
+   - 81 references on 36 static pages
+   - 112 references in 54 CMS items (News 34, Sectors 13, Case Studies 5, Team 2)
+   - the 16 Resources items already used this @id
+3. Added the standard WebSite node (`#website`) to 2 Resources items that referenced it without defining it:
+   - compliance-audit
+   - uk-tourist-visitor-visa (no `publisher` here, because that page has no Organization node)
+4. Ewen McKenzie:
+   - `@id` unified to `https://www.immtell.com/about/ewen-mckenzie#person` (was `/#ewen-mckenzie`; 13 references)
+   - schema `jobTitle` and descriptions changed from "Head of Sponsor Compliance" to "Head of Compliance", to match the profile page hero, intro, FAQ and SEO description
+   - affected: /about, /fees/compliance-audit-fees, /business/uk-immigration/protect-your-sponsor-licence, and Team items ewen-mckenzie and gavin-webster
+- Verified by read-back:
+  - fixes 1–3: 36/36 static and 56/56 CMS match exactly
+  - fix 4: 3 pages and 2 Team items checked
+  - no duplicate or unresolved @ids
+  - 0 `#gavin-webster`, `#organisation` or `#ewen-mckenzie` left
+- Skipped on request:
+  - "Immtell Ltd" name / text identifier on the compliance-audit Organization node
+  - missing `image` on NewsArticle/Article
+- Page content (not schema) still says "Head of Sponsor Compliance" in the Team `role` field, the SEO title and the video caption/alt text
