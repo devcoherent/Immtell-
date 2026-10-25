@@ -93,3 +93,15 @@ What to check on each:
   - "Immtell Ltd" name / text identifier on the compliance-audit Organization node
   - missing `image` on NewsArticle/Article
 - Page content (not schema) still says "Head of Sponsor Compliance" in the Team `role` field, the SEO title and the video caption/alt text
+
+## Final full re-check (2026-10-25)
+- Read back all 52 pages and all 237 CMS items across 11 collections
+- Compared against the state before today's work: the only differences are the approved changes
+  - www swap, Gavin/Ewen @id, Ewen title, compliance-audit fixes, 2 WebSite nodes
+  - no other schema content, CMS field, or draft/archive status changed
+- 214 schema blocks (36 static + 178 CMS), all valid JSON-LD
+  - 0 non-www, 0 http://, 2,866 www URLs
+  - 0 duplicate or unresolved @ids
+  - every CMS item contains its own www slug URL
+- Site head/footer code: no JSON-LD and no immtell.com URLs. No site-level registered scripts applied.
+- Only remaining warnings: NewsArticle (21) and Article (5) missing `image` (recommended; skipped on request)
