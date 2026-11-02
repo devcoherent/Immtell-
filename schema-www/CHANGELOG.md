@@ -105,3 +105,28 @@ What to check on each:
   - every CMS item contains its own www slug URL
 - Site head/footer code: no JSON-LD and no immtell.com URLs. No site-level registered scripts applied.
 - Only remaining warnings: NewsArticle (21) and Article (5) missing `image` (recommended; skipped on request)
+
+---
+# Client project: same changes re-applied (2026-11-02, not published)
+Site: "Copy of Immtell" (6ade418a856310836d6471f0), the only site visible through the connected Webflow MCP.
+
+- **Before:** the client site's schema was identical to the original pre-change baseline. The only differences were Webflow CDN asset IDs and the embed wrapper's quote style.
+- **Applied:** the same rule-based changes as on the working copy:
+  - www swap
+  - Gavin and Ewen `@id` set to `/about/<slug>#person`
+  - Ewen's schema title changed to "Head of Compliance"
+  - compliance-audit item: `#organisation` → `#organization`, and the url slash removed
+  - WebSite node added on 2 Resources items
+- **Scope:** 36 static pages (918 URLs) and 178 CMS items (1,943 URLs).
+- **Pre-check:** before applying, the planned result was compared with the verified final state of the working copy. It matched on all 214 blocks, apart from CDN asset IDs.
+- **Read-back:**
+  - 36/36 pages and 178/178 CMS schema fields match.
+  - No other CMS field changed, and no draft or archive status changed. The one draft Resources item was already a draft.
+  - 214 valid blocks, 0 non-www URLs, 0 duplicate or unresolved `@id`s.
+  - No old Gavin/Ewen/#organisation `@id`s and no "Head of Sponsor Compliance" remain in schema.
+  - Wrappers intact.
+- **Only warnings:** 26 NewsArticle/Article items without `image`. These are recommended, not errors, and were skipped on request.
+- **Outside schema, unchanged:**
+  - 2 non-www links in the Resources `body` field (uk-visa-sponsorship-in-the-uk-care-sector, uk-business-residency-uk-self-sponsorship-and-expansion-worker-visas).
+  - Canonical and default domain settings.
+  - Ewen's role field, SEO title and video caption still say "Head of Sponsor Compliance".
