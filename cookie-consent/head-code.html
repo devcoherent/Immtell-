@@ -1,0 +1,64 @@
+<!--
+  Immtell cookie consent: HEAD code
+  Where: Webflow > Site settings > Custom code > Head code
+  IMPORTANT: put this block ABOVE the Google Analytics (GA4) snippet.
+-->
+
+<!-- START: Cookie Consent (head) -->
+<style>
+  /* Preferences panel opens when the "Preferences" button is clicked */
+  .cookie-banner.is-prefs-open .cookie-prefs { display: block; }
+  /* Toggle "on" state */
+  .cookie-toggle[aria-checked="true"] { background-color: #111111; justify-content: flex-end; }
+  /* Keyboard focus */
+  .cookie-banner [data-cc]:focus-visible,
+  .cookie-banner [data-cc-toggle]:focus-visible { outline: 2px solid #1a5fd0; outline-offset: 2px; }
+  /* Hide the banner once a choice has been saved (no flash on page load) */
+  html.cc-has-consent .cookie-banner,
+  .cookie-banner.is-hidden { display: none; }
+</style>
+<script>
+  (function () {
+    var KEY = 'immtell_cookie_consent';
+    var MAX_AGE = 365 * 24 * 60 * 60 * 1000; // ask again after 12 months
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
+    var c = null;
+    try { c = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    var valid = !!(c && c.v === 1 && (Date.now() - c.ts) < MAX_AGE);
+    var analytics = valid && c.analytics ? 'granted' : 'denied';
+    var marketing = valid && c.marketing ? 'granted' : 'denied';
+
+    // Google Consent Mode v2: denied by default until the visitor chooses
+    window.gtag('consent', 'default', {
+      analytics_storage: analytics,
+      ad_storage: marketing,
+      ad_user_data: marketing,
+      ad_personalization: marketing,
+      functionality_storage: 'granted',
+      security_storage: 'granted',
+      wait_for_update: 500
+    });
+
+    if (valid) document.documentElement.classList.add('cc-has-consent');
+  })();
+</script>
+<!-- END: Cookie Consent (head) -->
+
+
+<!--
+  Your current GA4 snippet uses curly quotes (“ ” ‘ ’), so the browser cannot run it
+  and GA4 is NOT tracking right now. Replace the old GA4 block with this fixed one,
+  and keep it BELOW the consent block above.
+-->
+<!-- START: Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NLXNLGVVD5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NLXNLGVVD5');
+</script>
+<!-- END: Google Analytics (GA4) -->

@@ -1,0 +1,119 @@
+<!--
+  Immtell cookie consent: FOOTER code
+  Where: Webflow > Site settings > Custom code > Footer code (before </body>)
+  Works with the "Cookie Banner" element built in the Designer (data-cc attributes).
+  Optional: give any link (e.g. "Cookie settings" in the footer) the custom attribute
+  data-cc = open  and clicking it re-opens the banner with the preferences panel.
+-->
+
+<!-- START: Cookie Consent (footer) -->
+<script>
+  (function () {
+    var KEY = 'immtell_cookie_consent';
+    var MAX_AGE = 365 * 24 * 60 * 60 * 1000;
+
+    function read() {
+      try {
+        var c = JSON.parse(localStorage.getItem(KEY));
+        if (c && c.v === 1 && (Date.now() - c.ts) < MAX_AGE) return c;
+      } catch (e) {}
+      return null;
+    }
+
+    function applyConsent(c) {
+      var a = c.analytics ? 'granted' : 'denied';
+      var m = c.marketing ? 'granted' : 'denied';
+      if (typeof window.gtag === 'function') {
+        window.gtag('consent', 'update', {
+          analytics_storage: a,
+          ad_storage: m,
+          ad_user_data: m,
+          ad_personalization: m
+        });
+      }
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'cookie_consent_update',
+        cookie_analytics: !!c.analytics,
+        cookie_marketing: !!c.marketing
+      });
+    }
+
+    function init() {
+      var banner = document.querySelector('[data-cc="banner"]');
+      if (!banner) return;
+      var prefsBtn = banner.querySelector('[data-cc="preferences"]');
+
+      function setToggle(name, on) {
+        var t = banner.querySelector('[data-cc-toggle="' + name + '"]');
+        if (t) t.setAttribute('aria-checked', on ? 'true' : 'false');
+      }
+      function getToggle(name) {
+        var t = banner.querySelector('[data-cc-toggle="' + name + '"]');
+        return !!t && t.getAttribute('aria-checked') === 'true';
+      }
+      function setPrefsOpen(open) {
+        banner.classList.toggle('is-prefs-open', open);
+        if (prefsBtn) prefsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      function syncToggles() {
+        var c = read();
+        setToggle('analytics', !!(c && c.analytics));
+        setToggle('marketing', !!(c && c.marketing));
+      }
+      function show() {
+        document.documentElement.classList.remove('cc-has-consent');
+        banner.classList.remove('is-hidden');
+      }
+      function save(analytics, marketing) {
+        var c = { v: 1, analytics: !!analytics, marketing: !!marketing, ts: Date.now() };
+        try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
+        applyConsent(c);
+        document.documentElement.classList.add('cc-has-consent');
+        banner.classList.add('is-hidden');
+        setPrefsOpen(false);
+      }
+
+      syncToggles();
+
+      banner.addEventListener('click', function (e) {
+        var toggle = e.target.closest('[data-cc-toggle]');
+        if (toggle) {
+          toggle.setAttribute('aria-checked', toggle.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+          return;
+        }
+        var btn = e.target.closest('[data-cc]');
+        if (!btn) return;
+        var action = btn.getAttribute('data-cc');
+        if (action === 'accept') { e.preventDefault(); save(true, true); }
+        else if (action === 'reject') { e.preventDefault(); save(false, false); }
+        else if (action === 'save') { e.preventDefault(); save(getToggle('analytics'), getToggle('marketing')); }
+        else if (action === 'preferences') { e.preventDefault(); setPrefsOpen(!banner.classList.contains('is-prefs-open')); }
+      });
+
+      // Enter / Space for the link-based buttons and the toggles
+      banner.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var t = e.target;
+        if (t.matches('[data-cc-toggle], [role="button"]')) { e.preventDefault(); t.click(); }
+      });
+
+      // Any element with data-cc="open" (outside the banner) re-opens it
+      document.addEventListener('click', function (e) {
+        var opener = e.target.closest('[data-cc="open"]');
+        if (!opener) return;
+        e.preventDefault();
+        syncToggles();
+        setPrefsOpen(true);
+        show();
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+<!-- END: Cookie Consent (footer) -->
